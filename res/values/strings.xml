@@ -25,4 +25,7 @@ contains the digits 1 to 9 exactly once.</string>
 <string name="easy_label">Easy</string>
 <string name="medium_label">Medium</string>
 <string name="hard_label">Hard</string>
+<string name="game_title">Game</string>
+<string name="no_moves_label">No moves</string>
+<string name="keypad_title">Keypad</string>
 </resources>

@@ -82,6 +82,24 @@ public class PuzzleView extends View {
         foreground.setTextScaleX(width / height);
         foreground.setTextAlign(Paint.Align.CENTER);
         
+        // draw the number in the box
+        
+        // measure the font height
+        FontMetrics fm = foreground.getFontMetrics();
+        float font_height = fm.ascent + fm.descent;
+        
+        // centre in X - in the middle
+        float x = width / 2;
+        
+        // centre in Y - take into account the font height
+        float y = (height - font_height) / 2;
+        
+        for (int i=0; i<9; i++) {
+        	for (int j=0; j<9; j++) {
+        		canvas.drawText(this.game.getTileString(i, j), i*width+x, j*height+y, foreground);	
+        	}
+        }
+        
         // draw the hints
         // draw the selection
 	}

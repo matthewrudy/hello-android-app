@@ -202,6 +202,7 @@ public class PuzzleView extends View {
 		} else {
 			// its not valid mate
 			Log.d(TAG, "setSelectedTile: invalid - "+tile);
+			startAnimation(AnimationUtils.loadAnimation(game, R.anim.shake));
 		}
 	}
 	private void select(int x, int y) {

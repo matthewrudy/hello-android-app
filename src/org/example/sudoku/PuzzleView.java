@@ -102,7 +102,40 @@ public class PuzzleView extends View {
         
         // draw the hints
         // draw the selection
+        Log.d(TAG, "selRect="+selRect);
         
+        Paint selected = getPaint(R.color.puzzle_selected);
+        canvas.drawRect(selRect, selected);
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		Log.d(TAG, "onKeyDown: (keycode, event)=("+keyCode+", "+event+")");
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_DPAD_UP:
+			select(selX, selY-1);
+			break;
+		case KeyEvent.KEYCODE_DPAD_DOWN:
+			select(selX, selY+1);
+			break;
+		case KeyEvent.KEYCODE_DPAD_LEFT:
+			select(selX-1, selY);
+			break;
+		case KeyEvent.KEYCODE_DPAD_RIGHT:
+			select(selX+1, selY);
+			break;	
+		default:
+			return super.onKeyDown(keyCode, event);
+		}
+		return true;
+	}
+	
+	private void select(int x, int y) {
+		invalidate(selRect);
+		selX = Math.min(Math.max(x, 0), 8);
+		selY = Math.min(Math.max(y, 0), 8);
+		getRect(selX, selY, selRect);
+		invalidate(selRect);
 	}
 	
 	private Paint getPaint(int colour_id) {

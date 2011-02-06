@@ -102,6 +102,7 @@ public class PuzzleView extends View {
         
         // draw the hints
         // draw the selection
+        
 	}
 	
 	private Paint getPaint(int colour_id) {

@@ -33,4 +33,8 @@ public class Game extends Activity {
 //    	setContentView(puzzleView);
 //    	puzzleView.requestFocus();
     }
+    
+    public String getTileString(int x, int y) {
+    	return "X";
+    }
 }

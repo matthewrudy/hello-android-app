@@ -75,13 +75,24 @@ public class PuzzleView extends View {
         };
         
         // draw the numbers
+        Paint foreground = new Paint(Paint.ANTI_ALIAS_FLAG);
+        setPaintColor(foreground, R.color.puzzle_foreground);
+        foreground.setStyle(Style.FILL);
+        foreground.setTextSize(height * 0.75f);
+        foreground.setTextScaleX(width / height);
+        foreground.setTextAlign(Paint.Align.CENTER);
+        
         // draw the hints
         // draw the selection
 	}
 	
 	private Paint getPaint(int colour_id) {
 		Paint paint = new Paint();
-        paint.setColor(getResources().getColor(colour_id));
+		setPaintColor(paint, colour_id);
         return paint;
+	}
+	
+	private void setPaintColor(Paint paint, int colour_id) {
+		paint.setColor(getResources().getColor(colour_id));
 	}
 }

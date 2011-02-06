@@ -59,21 +59,18 @@ public class PuzzleView extends View {
         Paint hilite = getPaint(R.color.puzzle_hilite);
         Paint light  = getPaint(R.color.puzzle_light);
         
-        // draw the minor grid lines
+        // draw the grid lines
         for (int i=0; i<9; i++) {
-        	canvas.drawLine(0, i*height,   getWidth(), i*height,   light);
+        	Paint line_color = light;
+        	if (i%3 == 0) {
+        		// we use dark lines on the major grid
+        		line_color = dark;
+        	}
+        	// horizontal
+        	canvas.drawLine(0, i*height,   getWidth(), i*height,   line_color);
         	canvas.drawLine(0, i*height+1, getWidth(), i*height+1, hilite);
-        	canvas.drawLine(i*width,   0, i*width,   getHeight(),  light);
-        	canvas.drawLine(i*width+1, 0, i*width+1, getHeight(),  hilite);
-        };
-        
-         // draw the major grid lines
-        for (int i=0; i<9; i++) {
-        	if (i%3 != 0)
-        		continue;
-        	canvas.drawLine(0, i*height,   getWidth(), i*height,   dark);
-        	canvas.drawLine(0, i*height+1, getWidth(), i*height+1, hilite);
-        	canvas.drawLine(i*width,   0, i*width,   getHeight(),  dark);
+        	// vertical
+        	canvas.drawLine(i*width,   0, i*width,   getHeight(),  line_color);
         	canvas.drawLine(i*width+1, 0, i*width+1, getHeight(),  hilite);
         };
         

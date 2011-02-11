@@ -22,6 +22,26 @@ public class PuzzleView extends View {
 	    this.game = (Game) context;
 	    setFocusable(true);
 	    setFocusableInTouchMode(true);
+	    
+	    puzzle_background_paint = getPaint(R.color.puzzle_background);
+		puzzle_dark_paint       = getPaint(R.color.puzzle_dark);
+		puzzle_hilite_paint     = getPaint(R.color.puzzle_hilite);
+		puzzle_light_paint      = getPaint(R.color.puzzle_light);
+		puzzle_selected_paint   = getPaint(R.color.puzzle_selected);
+		puzzle_hint_0_paint     = getPaint(R.color.puzzle_hint_0);
+		puzzle_hint_1_paint     = getPaint(R.color.puzzle_hint_1);
+		puzzle_hint_2_paint     = getPaint(R.color.puzzle_hint_2);
+		
+		puzzle_foreground_paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        setPaintColor(puzzle_foreground_paint, R.color.puzzle_foreground);
+        puzzle_foreground_paint.setStyle(Style.FILL);
+        puzzle_foreground_paint.setTextSize(height * 0.75f);
+        puzzle_foreground_paint.setTextScaleX(width / height);
+        puzzle_foreground_paint.setTextAlign(Paint.Align.CENTER);
+        
+        // measure the font height in advance
+        FontMetrics fm = puzzle_foreground_paint.getFontMetrics();
+        font_height = fm.ascent + fm.descent;
 	}
 	
 	private float width;
@@ -46,47 +66,43 @@ public class PuzzleView extends View {
 				);
 	}
 	
+	private Paint puzzle_background_paint;
+	private Paint puzzle_dark_paint;
+	private Paint puzzle_hilite_paint;
+	private Paint puzzle_light_paint;
+	private Paint puzzle_foreground_paint;
+	private Paint puzzle_selected_paint;
+	private Paint puzzle_hint_0_paint;
+	private Paint puzzle_hint_1_paint;
+	private Paint puzzle_hint_2_paint;
+	
+	private float font_height;
+	
 	@Override
 	protected void onDraw(Canvas canvas) {
 		// draw the background
-		Paint background = getPaint(R.color.puzzle_background);
-        canvas.drawRect(0, 0, getWidth(), getHeight(), background);
+        canvas.drawRect(0, 0, getWidth(), getHeight(), puzzle_background_paint);
         
         // draw the board
         
-        // define the colours
-        Paint dark   = getPaint(R.color.puzzle_dark);
-        Paint hilite = getPaint(R.color.puzzle_hilite);
-        Paint light  = getPaint(R.color.puzzle_light);
-        
         // draw the grid lines
         for (int i=0; i<9; i++) {
-        	Paint line_color = light;
+        	Paint line_paint = puzzle_light_paint;
         	if (i%3 == 0) {
         		// we use dark lines on the major grid
-        		line_color = dark;
+        		line_paint = puzzle_dark_paint;
         	}
         	// horizontal
-        	canvas.drawLine(0, i*height,   getWidth(), i*height,   line_color);
-        	canvas.drawLine(0, i*height+1, getWidth(), i*height+1, hilite);
+        	canvas.drawLine(0, i*height,   getWidth(), i*height,   line_paint);
+        	canvas.drawLine(0, i*height+1, getWidth(), i*height+1, puzzle_hilite_paint);
         	// vertical
-        	canvas.drawLine(i*width,   0, i*width,   getHeight(),  line_color);
-        	canvas.drawLine(i*width+1, 0, i*width+1, getHeight(),  hilite);
+        	canvas.drawLine(i*width,   0, i*width,   getHeight(),  line_paint);
+        	canvas.drawLine(i*width+1, 0, i*width+1, getHeight(),  puzzle_hilite_paint);
         };
         
         // draw the numbers
-        Paint foreground = new Paint(Paint.ANTI_ALIAS_FLAG);
-        setPaintColor(foreground, R.color.puzzle_foreground);
-        foreground.setStyle(Style.FILL);
-        foreground.setTextSize(height * 0.75f);
-        foreground.setTextScaleX(width / height);
-        foreground.setTextAlign(Paint.Align.CENTER);
         
         // draw the number in the box
-        
-        // measure the font height
-        FontMetrics fm = foreground.getFontMetrics();
-        float font_height = fm.ascent + fm.descent;
         
         // centre in X - in the middle
         float x = width / 2;
@@ -96,24 +112,24 @@ public class PuzzleView extends View {
         
         for (int i=0; i<9; i++) {
         	for (int j=0; j<9; j++) {
-        		canvas.drawText(this.game.getTileString(i, j), i*width+x, j*height+y, foreground);	
+        		canvas.drawText(this.game.getTileString(i, j), i*width+x, j*height+y, puzzle_foreground_paint);	
         	}
         }
         
         // draw the hints
-        int hint_colours[] = {
-        		R.color.puzzle_hint_0,
-        		R.color.puzzle_hint_1,
-        		R.color.puzzle_hint_2,
+        Paint hint_paints[] = {
+        		puzzle_hint_0_paint,
+        		puzzle_hint_1_paint,
+        		puzzle_hint_2_paint,
         };
         
         Rect r = new Rect();
         for (int i=0; i<9; i++) {
         	for (int j=0; j<9; j++) {
         		int movesleft = 9 - game.getUsedTiles(i, j).length;
-        		if (movesleft < hint_colours.length) {
+        		if (movesleft < hint_paints.length) {
         			getRect(i, j, r);
-        			Paint hint = getPaint(hint_colours[movesleft]);
+        			Paint hint = hint_paints[movesleft];
         			canvas.drawRect(r, hint);
         		}
         	}
@@ -122,8 +138,7 @@ public class PuzzleView extends View {
         // draw the selection
         Log.d(TAG, "selRect="+selRect);
         
-        Paint selected = getPaint(R.color.puzzle_selected);
-        canvas.drawRect(selRect, selected);
+        canvas.drawRect(selRect, puzzle_selected_paint);
 	}
 	
 	@Override

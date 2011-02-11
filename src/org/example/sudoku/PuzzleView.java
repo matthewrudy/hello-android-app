@@ -18,11 +18,11 @@ public class PuzzleView extends View {
 	private final Game game;
 	
 	public PuzzleView(Context context) {
-		super(context);
-		this.game = (Game) context;
-		setFocusable(true);
-		setFocusableInTouchMode(true);
-	};
+	    super(context);
+	    this.game = (Game) context;
+	    setFocusable(true);
+	    setFocusableInTouchMode(true);
+	}
 	
 	private float width;
 	private float height;
@@ -102,9 +102,9 @@ public class PuzzleView extends View {
         
         // draw the hints
         int hint_colours[] = {
-        		getResources().getColor(R.color.puzzle_hint_0),
-        		getResources().getColor(R.color.puzzle_hint_1),
-        		getResources().getColor(R.color.puzzle_hint_2),
+        		R.color.puzzle_hint_0,
+        		R.color.puzzle_hint_1,
+        		R.color.puzzle_hint_2,
         };
         
         Rect r = new Rect();

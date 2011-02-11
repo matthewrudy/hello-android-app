@@ -18,25 +18,97 @@ public class Game extends Activity {
     
     private int puzzle[] = new int[9*9];
     
-    private PuzzleView puzzleview;
+    private final String easyPuzzle =
+        "360000000004230800000004200" +
+        "070460003820000014500013020" +
+        "001900000007048300000000045";
+    private final String mediumPuzzle =
+        "650000070000506000014000005" +
+        "007009000002314700000700800" +
+        "500000630000201000030000097";
+    private final String hardPuzzle =
+        "009000000080605020501078000" +
+        "000000700706040102004000000" +
+        "000720903090301080000000600";
     
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-    	super.onCreate(savedInstanceState);
-    	Log.d(TAG, "onCreate");
-    	
-    	int diff = getIntent().getIntExtra(KEY_DIFFICULTY, DIFFICULTY_EASY);
-    	puzzle = getPuzzle(diff);
-    	calculateUsedTiles();
-    	
-    	puzzleView = new PuzzleView(this);
-    	setContentView(puzzleView);
-    	puzzleView.requestFocus();
+    private int[] getPuzzle(int diff) {
+    	String puz;
+    	switch(diff) {
+    	case DIFFICULTY_HARD:
+    	    puz = hardPuzzle;
+    	    break;
+    	case DIFFICULTY_MEDIUM:
+    		puz = mediumPuzzle;
+    		break;
+    	case DIFFICULTY_EASY:
+    	default:
+    		puz = easyPuzzle;
+    		break;
+    	}
+        return fromPuzzleString(puz);
+    }
+    
+    static private String toPuzzleString(int[] puz) {
+    	StringBuilder buf = new StringBuilder();
+    	for (int element : puz) {
+    		buf.append(element);
+    	}
+    	return buf.toString();
+    }
+    
+    static protected int[] fromPuzzleString(String string) {
+        int[] puz = new int[string.length()];
+        for (int i=0; i<puz.length; i++) {
+        	puz[i] = string.charAt(i) - '0';
+        }
+        return puz;
+    }
+    
+    private int getTile(int x, int y) {
+    	return puzzle[y*9+x];
+    }
+    
+    private void setTile(int x, int y, int value) {
+    	puzzle[y*9+x] = value;
     }
     
     public String getTileString(int x, int y) {
-    	return "X";
+    	int v = getTile(x, y);
+    	if (v==0)
+    		return "";
+    	else
+    		return String.valueOf(v);
     }
+    
+    private PuzzleView puzzleView;
+    
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+       super.onCreate(savedInstanceState);
+       Log.d(TAG, "onCreate");
+
+       int diff = getIntent().getIntExtra(KEY_DIFFICULTY,
+             DIFFICULTY_EASY);
+       puzzle = getPuzzle(diff);
+       calculateUsedTiles();
+
+       puzzleView = new PuzzleView(this);
+       setContentView(puzzleView);
+       puzzleView.requestFocus();
+    }
+    
+    protected void showKeypadOrError(int x, int y) {
+		int tiles[] = getUsedTiles(x, y);
+		if (tiles.length == 9) {
+			Toast toast = Toast.makeText(this, R.string.no_moves_label, Toast.LENGTH_SHORT);
+			toast.setGravity(Gravity.CENTER, 0,	0);
+			toast.show();
+		} else {
+			Log.d(TAG, "showKeypadd: used="+toPuzzleString(tiles));
+			Dialog v= new Keypad(this, tiles, puzzleView);
+			v.show();
+		}
+	}
     
     public boolean setTileIfValid(int x, int y, int value) {
     	int tiles[] = getUsedTiles(x, y);

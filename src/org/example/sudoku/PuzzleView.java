@@ -117,22 +117,25 @@ public class PuzzleView extends View {
         }
         
         // draw the hints
-        Paint hint_paints[] = {
-        		puzzle_hint_0_paint,
-        		puzzle_hint_1_paint,
-        		puzzle_hint_2_paint,
-        };
         
-        Rect r = new Rect();
-        for (int i=0; i<9; i++) {
-        	for (int j=0; j<9; j++) {
-        		int movesleft = 9 - game.getUsedTiles(i, j).length;
-        		if (movesleft < hint_paints.length) {
-        			getRect(i, j, r);
-        			Paint hint = hint_paints[movesleft];
-        			canvas.drawRect(r, hint);
-        		}
-        	}
+        if (Prefs.getHints(getContext())) {
+	        Paint hint_paints[] = {
+	        		puzzle_hint_0_paint,
+	        		puzzle_hint_1_paint,
+	        		puzzle_hint_2_paint,
+	        };
+	        
+	        Rect r = new Rect();
+	        for (int i=0; i<9; i++) {
+	        	for (int j=0; j<9; j++) {
+	        		int movesleft = 9 - game.getUsedTiles(i, j).length;
+	        		if (movesleft < hint_paints.length) {
+	        			getRect(i, j, r);
+	        			Paint hint = hint_paints[movesleft];
+	        			canvas.drawRect(r, hint);
+	        		}
+	        	}
+	        }
         }
         
         // draw the selection

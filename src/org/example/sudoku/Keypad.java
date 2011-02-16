@@ -5,11 +5,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Toast;
 
 public class Keypad extends Dialog {
 	
-	private static final String TAG = "Sudoku";
+	// private static final String TAG = "Sudoku";
 
 	private final View keys[] = new View[9];
 	private View keypad;

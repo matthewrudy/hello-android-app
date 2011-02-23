@@ -52,6 +52,9 @@ public class Sudoku extends Activity implements OnClickListener {
 	    	  Intent i = new Intent(this, About.class);
 	    	  startActivity(i);
 	    	  break;
+	    	case R.id.continue_button:
+	    	  startGame(Game.DIFFICULTY_CONTINUE);
+	    	  break;
 	    	case R.id.new_button:
 	    	  openNewGameDialog();
 	    	  break;
@@ -95,7 +98,11 @@ public class Sudoku extends Activity implements OnClickListener {
     }
     
     private void startGame(int i) {
-    	Log.d(TAG, "clicked on " + getResources().getStringArray(R.array.difficulty)[i]);
+    	if (i==-1) {
+    		Log.d(TAG, "continue our previous game");
+    	} else {
+    	  Log.d(TAG, "clicked on " + getResources().getStringArray(R.array.difficulty)[i]);
+    	}
     	Intent intent = new Intent(Sudoku.this, Game.class);
     	intent.putExtra(Game.KEY_DIFFICULTY, i);
     	startActivity(intent);

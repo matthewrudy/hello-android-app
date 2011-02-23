@@ -12,9 +12,13 @@ public class Game extends Activity {
     
     public static final String KEY_DIFFICULTY = "org.example.sudoku.difficulty";
     
+    protected static final int DIFFICULTY_CONTINUE= -1;
+    
     public static final int DIFFICULTY_EASY   = 0;
     public static final int DIFFICULTY_MEDIUM = 1;
     public static final int DIFFICULTY_HARD   = 2;
+    
+    private static final String PREF_PUZZLE="puzzle";
     
     private int puzzle[] = new int[9*9];
     
@@ -34,6 +38,9 @@ public class Game extends Activity {
     private int[] getPuzzle(int diff) {
     	String puz;
     	switch(diff) {
+    	case DIFFICULTY_CONTINUE:
+    		puz = getPreferences(MODE_PRIVATE).getString(PREF_PUZZLE, easyPuzzle);
+    		break;
     	case DIFFICULTY_HARD:
     	    puz = hardPuzzle;
     	    break;
@@ -95,6 +102,8 @@ public class Game extends Activity {
        puzzleView = new PuzzleView(this);
        setContentView(puzzleView);
        puzzleView.requestFocus();
+       
+       getIntent().putExtra(KEY_DIFFICULTY, DIFFICULTY_CONTINUE);
     }
     
     @Override
@@ -106,7 +115,11 @@ public class Game extends Activity {
     @Override
     protected void onPause() {
     	super.onPause();
+    	Log.d(TAG, "onPause");
     	Music.stop(this);
+    	
+    	// save the puzzle
+    	getPreferences(MODE_PRIVATE).edit().putString(PREF_PUZZLE, toPuzzleString(puzzle)).commit();
     }
     
     protected void showKeypadOrError(int x, int y) {

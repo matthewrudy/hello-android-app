@@ -1,19 +1,26 @@
 package org.example.sudoku;
 
-import android.view.View;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Paint.FontMetrics;
 import android.graphics.Paint.Style;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.animation.AnimationUtils;
 
 public class PuzzleView extends View {
 	private static final String TAG = "Sudoku";
+	
+	private static final String SELX = "selX";
+	private static final String SELY = "selY";
+	private static final String VIEW_STATE = "viewState";
+	private static final int ID = 42;
     
 	private final Game game;
 	
@@ -42,6 +49,29 @@ public class PuzzleView extends View {
         // measure the font height in advance
         FontMetrics fm = puzzle_foreground_paint.getFontMetrics();
         font_height = fm.ascent + fm.descent;
+        
+        // this is used for loading state
+        setId(ID);
+	}
+	
+	@Override
+	protected Parcelable onSaveInstanceState() {
+		Parcelable p = super.onSaveInstanceState();
+		Log.d(TAG, "onSaveInstanceState");
+		Bundle bundle = new Bundle();
+		bundle.putInt(SELX, selX);
+		bundle.putInt(SELY, selY);
+		bundle.putParcelable(VIEW_STATE, p);
+		return bundle;
+	}
+	
+	@Override
+	protected void onRestoreInstanceState(Parcelable state) {
+		Log.d(TAG, "onRestoreInstanceState");
+		Bundle bundle = (Bundle) state;
+		select(bundle.getInt(SELX), bundle.getInt(SELY));
+		super.onRestoreInstanceState(bundle.getParcelable(VIEW_STATE));
+		return ;
 	}
 	
 	private float width;
